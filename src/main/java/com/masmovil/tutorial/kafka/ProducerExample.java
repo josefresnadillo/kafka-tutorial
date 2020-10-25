@@ -1,6 +1,7 @@
 package com.masmovil.tutorial.kafka;
 
 import org.apache.kafka.clients.producer.*;
+import java.time.LocalDateTime;
 import java.util.Properties;
 
 public class ProducerExample {
@@ -17,7 +18,9 @@ public class ProducerExample {
         Producer<String, String> producer = new KafkaProducer<>(props);
 
         // without key
-        ProducerRecord<String, String> record = new ProducerRecord<>("ragnarok", "record2");
+        LocalDateTime now = LocalDateTime.now();
+        ProducerRecord<String, String> record = new ProducerRecord<>(Topic.RAGNAROK.getName(),
+                "{\"key\":\"key1\",\"value\":\"value1\", \"date\":\"" + now.toString() + "\"}");
 
         producer.send(record, (m, e) -> {
             if (e != null) {

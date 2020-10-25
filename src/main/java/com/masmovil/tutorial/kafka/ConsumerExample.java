@@ -18,7 +18,7 @@ public class ConsumerExample {
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         final Consumer<String, String> consumer = new KafkaConsumer<>(props);
-        consumer.subscribe(Collections.singletonList("ragnarok"));
+        consumer.subscribe(Collections.singletonList(Topic.RAGNAROK.getName()));
 
         int total_count = 0;
 

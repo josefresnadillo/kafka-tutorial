@@ -23,19 +23,19 @@ public class ProducerExample {
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "io.confluent.kafka.serializers.KafkaJsonSerializer");
 
-        Producer<String, WordValue> producer = new KafkaProducer<>(props);
 
-        final String word = words.get(new Random().nextInt(words.size()));
-
-        final WordValue object = new WordValue("id", word, LocalDateTime.now().toString());
+        final WordValue wordValue = new WordValue("id",
+                words.get(new Random().nextInt(words.size())),
+                LocalDateTime.now().toString());
 
         // ProducerRecord without key
-        ProducerRecord<String, WordValue> record = new ProducerRecord<>(Topic.RAGNAROK.getTopicName(), object);
+        final Producer<String, WordValue> producer = new KafkaProducer<>(props);
+        final ProducerRecord<String, WordValue> record = new ProducerRecord<>(Topic.RAGNAROK_WORDS_STREAM.getTopicName(), wordValue);
         producer.send(record, (m, e) -> {
             if (e != null) {
                 e.printStackTrace();
             } else {
-                System.out.printf("Produced record with word %s to topic %s partition [%d] @ offset %d%n", word, m.topic(), m.partition(), m.offset());
+                System.out.printf("Produced record with word %s to topic %s partition [%d] @ offset %d%n", wordValue.toString(), m.topic(), m.partition(), m.offset());
             }
         });
 

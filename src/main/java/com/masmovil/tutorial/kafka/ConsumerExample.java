@@ -23,9 +23,7 @@ public class ConsumerExample {
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         final Consumer<String, WordValue> consumer = new KafkaConsumer<>(props);
-        consumer.subscribe(Collections.singletonList(Topic.RAGNAROK.getTopicName()));
-
-        int total_count = 0;
+        consumer.subscribe(Collections.singletonList(Topic.RAGNAROK_WORDS_STREAM.getTopicName()));
 
         try {
             while (true) {
@@ -33,8 +31,7 @@ public class ConsumerExample {
                 for (ConsumerRecord<String, WordValue> record : records) {
                     String key = record.key();
                     WordValue value = record.value();
-                    total_count += 1;
-                    System.out.printf("Consumed record with key %s and value %s, and updated total count to %d%n", key, value, total_count);
+                    System.out.printf("Consumed record with key %s and value %s", key, value);
                 }
             }
         } finally {

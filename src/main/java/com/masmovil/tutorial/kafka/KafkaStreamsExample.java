@@ -22,8 +22,6 @@ import java.util.Properties;
 
 public class KafkaStreamsExample {
 
-    static final String WORD_COUNT_TOPIC = Topic.RAGNAROK_STREAM_RESULT.getTopicName();
-
     public static void main(final String[] args) {
 
         final Properties streamsConfiguration = new Properties();
@@ -54,7 +52,7 @@ public class KafkaStreamsExample {
         final StreamsBuilder builder = new StreamsBuilder();
 
         // We assume the input topic contains records where the values are WordValue. We don't care about the key
-        final KStream<String, WordValue> input = builder.stream(Topic.RAGNAROK.getTopicName(),
+        final KStream<String, WordValue> input = builder.stream(Topic.RAGNAROK_WORDS_STREAM.getTopicName(),
                 Consumed.with(Serdes.String(), wordValueSerde));
 
         final KTable<String, Long> wordCount = input
@@ -62,7 +60,7 @@ public class KafkaStreamsExample {
                 .groupByKey()
                 .count();
 
-        wordCount.toStream().to(WORD_COUNT_TOPIC);
+        wordCount.toStream().to(Topic.RAGNAROK_WORDS_COUNT_STREAM_RESULT.getTopicName());
 
         final Topology topology = builder.build();
 

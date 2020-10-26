@@ -1,8 +1,8 @@
 package com.masmovil.tutorial.kafka.model;
 
 public enum Topic {
-    RAGNAROK("ragnarokTopic"),
-    RAGNAROK_STREAM_RESULT("ragnarokWordCount");
+    RAGNAROK_WORDS_STREAM("ragnarokTopic"),
+    RAGNAROK_WORDS_COUNT_STREAM_RESULT("ragnarokWordCount");
 
     private final String topicName;
 

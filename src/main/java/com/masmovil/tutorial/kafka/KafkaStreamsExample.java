@@ -43,20 +43,19 @@ public class KafkaStreamsExample {
 
         // Value Serializer and Deserializer
         Map<String, Object> serdeProps = new HashMap<>();
-        final Serializer<WordValue> worldValueSerializer = new JsonPOJOSerializer<>();
         serdeProps.put("JsonPOJOClass", WordValue.class);
+        final Serializer<WordValue> worldValueSerializer = new JsonPOJOSerializer<>();
         worldValueSerializer.configure(serdeProps, false);
         final Deserializer<WordValue> wordValueDeserializer = new JsonPOJODeserializer<>();
-        serdeProps.put("JsonPOJOClass", WordValue.class);
         wordValueDeserializer.configure(serdeProps, false);
-        final Serde<WordValue> kafkaValueExampleSerde = Serdes.serdeFrom(worldValueSerializer, wordValueDeserializer);
+        final Serde<WordValue> wordValueSerde = Serdes.serdeFrom(worldValueSerializer, wordValueDeserializer);
 
 
         final StreamsBuilder builder = new StreamsBuilder();
 
         // We assume the input topic contains records where the values are WordValue. We don't care about the key
         final KStream<String, WordValue> input = builder.stream(Topic.RAGNAROK.getTopicName(),
-                Consumed.with(Serdes.String(), kafkaValueExampleSerde));
+                Consumed.with(Serdes.String(), wordValueSerde));
 
         final KTable<String, Long> wordCount = input
                 .selectKey((k, v) -> v.getWord())

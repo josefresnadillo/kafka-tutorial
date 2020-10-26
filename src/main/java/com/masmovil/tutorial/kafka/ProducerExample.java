@@ -12,7 +12,7 @@ import java.util.Random;
 public class ProducerExample {
 
     private static final List<String> words = List.of("Plandemia", "Villgates", "Killgates", "Negacionist", "5G",
-            "Trump", "QAnon", "Bolsonaro", "China", "Covid", "Borat", "MiguelBose", "Soros", "Bleach");
+            "Trump", "China", "Covid", "MiguelBose");
 
     public static void main(final String[] args) {
 
@@ -25,14 +25,12 @@ public class ProducerExample {
 
         Producer<String, WordValue> producer = new KafkaProducer<>(props);
 
-        // without key
-        int position = new Random().nextInt(words.size());
-        final String word = words.get(position);
+        final String word = words.get(new Random().nextInt(words.size()));
 
         final WordValue object = new WordValue("id", word, LocalDateTime.now().toString());
 
+        // ProducerRecord without key
         ProducerRecord<String, WordValue> record = new ProducerRecord<>(Topic.RAGNAROK.getTopicName(), object);
-
         producer.send(record, (m, e) -> {
             if (e != null) {
                 e.printStackTrace();

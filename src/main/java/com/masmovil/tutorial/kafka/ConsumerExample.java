@@ -5,7 +5,6 @@ import com.masmovil.tutorial.kafka.model.WordValue;
 import io.confluent.kafka.serializers.KafkaJsonDeserializerConfig;
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.clients.producer.ProducerConfig;
-
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;

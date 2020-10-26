@@ -25,16 +25,12 @@ public class KafkaStreamsExample {
     public static void main(final String[] args) {
 
         final Properties streamsConfiguration = new Properties();
-
-        // Give the Streams application a unique name. The name must be unique in the Kafka cluster
-        // against which the application is run.
         streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, "sum-words-lambda-example");
         streamsConfiguration.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         streamsConfiguration.put(StreamsConfig.CLIENT_ID_CONFIG, "sum-words-lambda-example-client");
         streamsConfiguration.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         streamsConfiguration.put(StreamsConfig.STATE_DIR_CONFIG, "/tmp/kafka-streams");
         streamsConfiguration.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 10 * 1000); // 10 seconds
-
 
         // Key Serializer and Deserializer
         streamsConfiguration.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());

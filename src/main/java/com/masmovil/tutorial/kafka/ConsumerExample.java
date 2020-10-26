@@ -1,7 +1,12 @@
 package com.masmovil.tutorial.kafka;
 
+import com.masmovil.tutorial.kafka.model.Topic;
+import com.masmovil.tutorial.kafka.model.WordValue;
+import io.confluent.kafka.serializers.KafkaJsonDeserializerConfig;
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.clients.producer.ProducerConfig;
+
+import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
 
@@ -13,21 +18,22 @@ public class ConsumerExample {
 
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "http://localhost:9092");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "io.confluent.kafka.serializers.KafkaJsonDeserializer");
+        props.put(KafkaJsonDeserializerConfig.JSON_VALUE_TYPE, WordValue.class);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "ragnarok-consumer-1");
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
-        final Consumer<String, String> consumer = new KafkaConsumer<>(props);
-        consumer.subscribe(Collections.singletonList(Topic.RAGNAROK.getName()));
+        final Consumer<String, WordValue> consumer = new KafkaConsumer<>(props);
+        consumer.subscribe(Collections.singletonList(Topic.RAGNAROK.getTopicName()));
 
         int total_count = 0;
 
         try {
             while (true) {
-                ConsumerRecords<String, String> records = consumer.poll(100);
-                for (ConsumerRecord<String, String> record : records) {
+                ConsumerRecords<String, WordValue> records = consumer.poll(Duration.ofMillis(100));
+                for (ConsumerRecord<String, WordValue> record : records) {
                     String key = record.key();
-                    String value = record.value();
+                    WordValue value = record.value();
                     total_count += 1;
                     System.out.printf("Consumed record with key %s and value %s, and updated total count to %d%n", key, value, total_count);
                 }
